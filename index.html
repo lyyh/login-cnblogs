@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>代理页面</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<script type="text/javascript" src='http://common.cnblogs.com/script/jquery.js'></script>
+<script type="text/javascript" src='https://passport.cnblogs.com/scripts/jsencrypt.min.js'></script>
+</head>
+<body>
+	<div id="result"></div>
+   <script type="text/javascript">
+   	(function(){
+         var xmlhttp = new XMLHttpRequest(),
+             url = 'http://127.0.0.1:8000/getLoginData?t='+new Date().getTime();
+         xmlhttp.onreadystatechange = function(){
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+               var login_data = JSON.parse(xmlhttp.responseText);
+
+               doEncrypt(login_data);
+            }
+         }
+         xmlhttp.open('get',url,true);
+         xmlhttp.send();
+      })()
+
+      //对账号密码进行加密
+      function doEncrypt(data){
+         var encrypt = new JSEncrypt(),
+             xmlhttp = new XMLHttpRequest(),
+             login_url = 'http://127.0.0.1:8000/login?t='+new Date().getTime();
+
+         encrypt.setPublicKey('MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCp0wHYbg/NOPO3nzMD3dndwS0MccuMeXCHgVlGOoYyFwLdS24Im2e7YyhB0wrUsyYf0/nhzCzBK8ZC9eCWqd0aHbdgOQT6CuFQBMjbyGYvlVYU2ZP7kG9Ft6YV6oc9ambuO7nPZh+bvXH0zDKfi02prknrScAKC0XhadTHT3Al0QIDAQAB');
+      
+         var encrypted_acc = encrypt.encrypt(data.account), //账号
+             encrypted_pwd = encrypt.encrypt(data.password); //密码
+
+         xmlhttp.onreadystatechange = function(){
+               document.getElementById("result").innerHTML = xmlhttp.responseText;
+         }
+
+         xmlhttp.open('post',login_url,true);
+         xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+         xmlhttp.send('ecy_acc='+encrypted_acc+'&ecy_pwd='+encrypted_pwd+'&remember='+data.remember);  
+   }
+   </script>
+</body>
+</html>
