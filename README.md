@@ -5,7 +5,7 @@
 3. 服务器接收到加密后的账号和密码后，并获取登录凭证，之后向cnblogs发送登陆请求。将结果返回给index.html
 
 #### request 请求头headers:  
-cookie: 'AspxAutoDetectCookieSupport=1'
+cookie: 'AspxAutoDetectCookieSupport=1'  
 VerificationToken(凭证): (xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)  
 
 #### 运行方式
